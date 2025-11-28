@@ -1,0 +1,55 @@
+version: "3.9"
+
+services:
+
+  mongo:
+    image: mongo:6
+    container_name: mean-mongo
+    restart: always
+    volumes:
+      - mongo-data:/data/db
+    networks:
+      - mean-network
+
+  backend:
+    image: your-dockerhub-username/mean-backend:latest
+    container_name: mean-backend
+    restart: always
+    environment:
+      - PORT=8080
+      - MONGO_URL=mongodb://mongo:27017/dd_db
+    depends_on:
+      - mongo
+    networks:
+      - mean-network
+
+  frontend:
+    image: your-dockerhub-username/mean-frontend:latest
+    container_name: mean-frontend
+    restart: always
+    depends_on:
+      - backend
+    networks:
+      - mean-network
+
+  nginx:
+    image: nginx:alpine
+    container_name: mean-nginx
+    restart: always
+    ports:
+      - "80:80"
+    depends_on:
+      - frontend
+      - backend
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+    networks:
+      - mean-network
+
+volumes:
+  mongo-data:
+
+networks:
+  mean-network:
+    driver: bridge
+
