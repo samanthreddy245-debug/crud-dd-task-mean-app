@@ -1,7 +1,8 @@
-version: "3.9"
-
 services:
 
+  # -------------------------
+  # MongoDB Database
+  # -------------------------
   mongo:
     image: mongo:6
     container_name: mean-mongo
@@ -11,20 +12,26 @@ services:
     networks:
       - mean-network
 
+  # -------------------------
+  # Node.js Backend API
+  # -------------------------
   backend:
-    image: your-dockerhub-username/mean-backend:latest
+    image: chilukurir/mean-backend:latest
     container_name: mean-backend
     restart: always
     environment:
-      - PORT=8080
-      - MONGO_URL=mongodb://mongo:27017/dd_db
+      PORT: 8080
+      MONGO_URL: mongodb://mongo:27017/dd_db
     depends_on:
       - mongo
     networks:
       - mean-network
 
+  # -------------------------
+  # Angular Frontend (built and served by Nginx)
+  # -------------------------
   frontend:
-    image: your-dockerhub-username/mean-frontend:latest
+    image: chilukurir/mean-frontend:latest
     container_name: mean-frontend
     restart: always
     depends_on:
@@ -32,6 +39,9 @@ services:
     networks:
       - mean-network
 
+  # -------------------------
+  # Reverse Proxy (Main Entry Point on Port 80)
+  # -------------------------
   nginx:
     image: nginx:alpine
     container_name: mean-nginx
@@ -46,10 +56,15 @@ services:
     networks:
       - mean-network
 
+# -------------------------
+# Persistent Mongo Storage
+# -------------------------
 volumes:
   mongo-data:
 
+# -------------------------
+# Shared Network for Containers
+# -------------------------
 networks:
   mean-network:
     driver: bridge
-
