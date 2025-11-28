@@ -16,7 +16,7 @@ services:
   # Node.js Backend API
   # -------------------------
   backend:
-    image: chilukurir/mean-backend:latest
+    image: samanth195/mean-backend:latest
     container_name: mean-backend
     restart: always
     environment:
@@ -31,7 +31,7 @@ services:
   # Angular Frontend (built and served by Nginx)
   # -------------------------
   frontend:
-    image: chilukurir/mean-frontend:latest
+    image: samanth195/mean-frontend:latest
     container_name: mean-frontend
     restart: always
     depends_on:
